@@ -28,16 +28,31 @@ Board::Board() {
 	Tile f(green, q);
 
 	game[0][0] = t;
-	game[0][3] = f;
+	game[0][1] = f;
 }
-void Board::move(int fr, int fc, int tr, int tc) {
-	game[tr][tc] = game[fr][fc];
+void Board::move(int fromr, int fromc, int tor, int toc) {
+	game[tor][toc] = game[fromr][fromc];
 	Piece p;
-	game[fr][fc].setOccupant(p);
+	game[fromr][fromc].setOccupant(p);
+}
+void Board::fight(int attackr, int attackc, int defendr, int defendc) {
+	if (game[attackr][attackc].getOccupant().getValue() > game[defendr][defendc].getOccupant().getValue())
+	{
+		move(attackr, attackc, defendr, defendc);
+	}
+	else if ((game[attackr][attackc].getOccupant().getValue() == game[defendr][defendc].getOccupant().getValue()))
+	{
+		Piece p;
+		game[attackr][attackc].setOccupant(p);
+		game[defendr][defendc].setOccupant(p);
+	}
+	else
+	{
+		Piece p;
+		game[attackr][attackc].setOccupant(p);
+	}
 }
 vector<pair<int,int>> Board::getMoves(int r, int c) {
-	int row = r;
-	int column = c;
 	vector<pair<int, int>> moves;
 	if (r > 0 && game[r - 1][c].getAccessible() == true && game[r - 1][c].getOccupied() == false)
 	{
@@ -60,27 +75,24 @@ vector<pair<int,int>> Board::getMoves(int r, int c) {
 	return moves;
 }
 vector<pair<int, int>> Board::getAttacks(int r, int c) {
-	int row = r;
-	int column = c;
 	bool side = game[r][c].getOccupant().getSide();
 	vector<pair<int, int>> attackMoves;
-	if (r > 0 && game[r - 1][c].getAccessible() == true && game[r - 1][c].getOccupied() == true && game[r - 1][c].getOccupant().getSide() != side)
+	if (r > 0 && game[r - 1][c].getAccessible() == true && game[r - 1][c].getOccupied() == true && (game[r - 1][c].getOccupant().getSide() != side))
 	{
 		attackMoves.push_back(make_pair(r - 1, c));
 	}
-	if (r < 9 && game[r + 1][c].getAccessible() == true && game[r + 1][c].getOccupied() == true && game[r + 1][c].getOccupant().getSide() != side)
+	if (r < 9 && game[r + 1][c].getAccessible() == true && game[r + 1][c].getOccupied() == true && (game[r + 1][c].getOccupant().getSide() != side))
 	{
 		attackMoves.push_back(make_pair(r + 1, c));
 	}
-	if (c > 0 && game[r][c - 1].getAccessible() == true && game[r][c - 1].getOccupied() == true && game[r][c - 1].getOccupant().getSide() != side)
+	if (c > 0 && game[r][c - 1].getAccessible() == true && game[r][c - 1].getOccupied() == true && (game[r][c - 1].getOccupant().getSide() != side))
 	{
 		attackMoves.push_back(make_pair(r, c - 1));
 	}
-	if (c < 9 && game[r][c + 1].getAccessible() == true && game[r][c + 1].getOccupied() == true && game[r][c + 1].getOccupant().getSide() != side)
+	if (c < 9 && game[r][c + 1].getAccessible() == true && game[r][c + 1].getOccupied() == true && (game[r][c + 1].getOccupant().getSide() != side))
 	{
 		attackMoves.push_back(make_pair(r, c + 1));
 	}
-
 
 	return attackMoves;
 }
@@ -95,7 +107,15 @@ void Board::printBoard() {
 			else
 			{
 				cout << "{";
-				cout << setw(2) << game[i][j].getOccupant().getValue();
+				if ((game[i][j].getOccupant().getSide() == true) && (game[i][j].getOccupant().getValue() != -1))
+				{
+					cout << "r";
+				}
+				else if(game[i][j].getOccupant().getValue() != -1)
+				{
+					cout << "b";
+				}
+				cout << game[i][j].getOccupant().getValue();
 				cout << "}";
 			}
 			cout << " | ";
