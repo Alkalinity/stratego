@@ -12,9 +12,10 @@
 class Board{
 public:
 	Board();
-	void move(int fr, int fc, int tr, int tc);
+	void move(int fromr, int fromc, int tor, int toc);
 	vector<pair<int,int>> getMoves(int r, int c);
 	vector<pair<int, int>> getAttacks(int r, int c);
+	void fight(int attackr, int attackc, int defendr, int defendc);
 	void printBoard();
 	bool isValid(int r, int c);
 private:

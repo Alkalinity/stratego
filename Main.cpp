@@ -25,9 +25,10 @@ int main() {
 		{
 			cout << ++m << ":  (" << validMoves[i].first << " , " << validMoves[i].second << ")" << endl;
 		}
+		int atk = m;
 		for (int i = 0; i < validAttacks.size(); i++)
 		{
-			cout << ++m << ":  (" << validMoves[i].first << " , " << validMoves[i].second << ")  Attack" << endl;
+			cout << ++m << ":  (" << validAttacks[i].first << " , " << validAttacks[i].second << ")  Attack" << endl;
 		}
 
 		validMoves.insert(validMoves.end(), validAttacks.begin(), validAttacks.end());
@@ -36,7 +37,14 @@ int main() {
 
 		int moveChoice = 0;
 		cin >> moveChoice;
-		play.move(fr, fc, validMoves[moveChoice - 1].first, validMoves[moveChoice - 1].second);
+		if (moveChoice > atk)
+		{
+			play.fight(fr, fc, validMoves[moveChoice - 1].first, validMoves[moveChoice - 1].second);
+		}
+		else
+		{
+			play.move(fr, fc, validMoves[moveChoice - 1].first, validMoves[moveChoice - 1].second);
+		}
 
 		play.printBoard();
 
