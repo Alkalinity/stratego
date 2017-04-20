@@ -118,7 +118,7 @@ Board::Board() {
 	redTurn = true;
 	color green = { 0,1,0 };
 	color blue = { 0,0,1 };
-	Normal_Piece p(4, true);
+	Normal_Piece p(2, true);
 	for (int i = 0; i < 10; ++i)
 	{
 		for (int j = 0; j < 10; ++j)
@@ -139,9 +139,16 @@ Board::Board() {
 	game[0][1] = f;
 }
 void Board::move(int fromr, int fromc, int tor, int toc) {
-	game[tor][toc] = game[fromr][fromc];
-	Piece p;
-	game[fromr][fromc].setOccupant(p);
+	if (game[tor][toc].getOccupied())
+	{
+		fight(fromr, fromc, tor, toc);
+	}
+	else
+	{
+		game[tor][toc] = game[fromr][fromc];
+		Piece p;
+		game[fromr][fromc].setOccupant(p);
+	}
 }
 void Board::fight(int attackr, int attackc, int defendr, int defendc) {
 	cout << "Your: " << game[attackr][attackc].getOccupant().getValue() << " fought their: " << game[defendr][defendc].getOccupant().getValue();
@@ -178,23 +185,83 @@ void Board::fight(int attackr, int attackc, int defendr, int defendc) {
 }
 vector<pair<int,int>> Board::getMoves(int r, int c) {
 	vector<pair<int, int>> moves;
-	if (r > 0 && game[r - 1][c].getAccessible() == true && game[r - 1][c].getOccupied() == false)
+	bool side = game[r][c].getOccupant().getSide();
+	//return no moves for bombs and flags
+	if(game[r][c].getOccupant().getValue()==0 || game[r][c].getOccupant().getValue() == 99)
 	{
-		moves.push_back(make_pair(r - 1, c));
+		return moves;
 	}
-	if (r < 9 && game[r + 1][c].getAccessible() == true && game[r + 1][c].getOccupied() == false)
+	//get moves for scout piece(2)
+	else if (game[r][c].getOccupant().getValue() == 2)
 	{
-		moves.push_back(make_pair(r + 1, c));
-	}
-	if (c > 0 && game[r][c - 1].getAccessible() == true && game[r][c - 1].getOccupied() == false)
-	{
-		moves.push_back(make_pair(r, c - 1));
-	}
-	if (c < 9 && game[r][c + 1].getAccessible() == true && game[r][c + 1].getOccupied() == false)
-	{
-		moves.push_back(make_pair(r, c + 1));
-	}
+		//up column
+		int i = c-1;
+		while (i>=0 && game[r][i].getOccupant().getValue() == -1)
+		{
+			moves.push_back(make_pair(r, i));
+			i--;
+		}
+		if (i >= 0 && game[r][i].getOccupant().getSide() != side)
+		{
+			moves.push_back(make_pair(r, i));
+		}
 
+		//down column
+		i = c + 1;
+		while (i < 10 && game[r][i].getOccupant().getValue() == -1)
+		{
+			moves.push_back(make_pair(r, i));
+			i++;
+		}
+		if (i < 10 && game[r][i].getOccupant().getSide() != side)
+		{
+			moves.push_back(make_pair(r, i));
+		}
+
+		//left in row
+		i = r - 1;
+		while (i >= 0 && game[i][c].getOccupant().getValue() == -1)
+		{
+			moves.push_back(make_pair(i, c));
+			i--;
+		}
+		if (i >= 0 && game[i][c].getOccupant().getSide() != side)
+		{
+			moves.push_back(make_pair(i, c));
+		}
+
+		//right in row
+		i = r + 1;
+		while (i < 10 && game[i][c].getOccupant().getValue() == -1)
+		{
+			moves.push_back(make_pair(i, c));
+			i++;
+		}
+		if (i < 10 && game[i][c].getOccupant().getSide() != side)
+		{
+			moves.push_back(make_pair(i, c));
+		}
+	}
+	//return the moves for all other pieces
+	else 
+	{
+		if ((r > 0 && game[r - 1][c].getAccessible() == true && game[r - 1][c].getOccupied() == false) || (game[r - 1][c].getOccupied() == true && (game[r - 1][c].getOccupant().getSide() != side)))
+		{
+			moves.push_back(make_pair(r - 1, c));
+		} 
+		if ((r < 9 && game[r + 1][c].getAccessible() == true && game[r + 1][c].getOccupied() == false) || (game[r + 1][c].getOccupied() == true && (game[r + 1][c].getOccupant().getSide() != side)))
+		{
+			moves.push_back(make_pair(r + 1, c));
+		}
+		if ((c > 0 && game[r][c - 1].getAccessible() == true && game[r][c - 1].getOccupied() == false) || (game[r][c - 1].getOccupied() == true && (game[r][c - 1].getOccupant().getSide() != side)))
+		{
+			moves.push_back(make_pair(r, c - 1));
+		}
+		if ((c < 9 && game[r][c + 1].getAccessible() == true && game[r][c + 1].getOccupied() == false) || (game[r][c + 1].getOccupied() == true && (game[r][c + 1].getOccupant().getSide() != side)))
+		{
+			moves.push_back(make_pair(r, c + 1));
+		}
+	}
 
 	return moves;
 }

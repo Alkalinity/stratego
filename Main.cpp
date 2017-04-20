@@ -11,6 +11,8 @@ int main() {
 	while(playing == 0)
 	{
 		playing = play.getGameState();
+
+		//get the coordinates of the piece to be moved
 		int fr = 0, fc = 0;
 		do
 		{
@@ -19,34 +21,25 @@ int main() {
 			cin >> fc;
 		} while (fr<0||fr>9||fc<0||fc>9||!play.isValid(fr, fc));
 		
+		//return the valid moves for the chosen piece
 		cout << "The valid moves for the piece at (" << fr << " , " << fc << ") are: " << endl;
 		vector<pair<int, int>> validMoves = play.getMoves(fr,fc);
-		vector<pair<int, int>> validAttacks = play.getAttacks(fr, fc);
 		int m = 0;
 		for (int i = 0; i < validMoves.size(); i++)
 		{
 			cout << ++m << ":  (" << validMoves[i].first << " , " << validMoves[i].second << ")" << endl;
 		}
-		int atk = m;
-		for (int i = 0; i < validAttacks.size(); i++)
-		{
-			cout << ++m << ":  (" << validAttacks[i].first << " , " << validAttacks[i].second << ")  Attack" << endl;
-		}
 
-		validMoves.insert(validMoves.end(), validAttacks.begin(), validAttacks.end());
-
+		//get the desired move
 		cout << "Choose one of these moves by entering the number(i.e. '1', '2'...) :" << endl;
 
 		int moveChoice = 0;
 		cin >> moveChoice;
-		if (moveChoice > atk)
-		{
-			play.fight(fr, fc, validMoves[moveChoice - 1].first, validMoves[moveChoice - 1].second);
-		}
-		else
-		{
-			play.move(fr, fc, validMoves[moveChoice - 1].first, validMoves[moveChoice - 1].second);
-		}
+
+		//make the move
+		play.move(fr, fc, validMoves[moveChoice - 1].first, validMoves[moveChoice - 1].second);
+
+		//change the turn and print the updated board
 		play.nextTurn();
 		play.printBoard();
 
