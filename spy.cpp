@@ -1,4 +1,4 @@
-//  Normal_Piece.cpp
+//  Spy.cpp
 //  CS 120 A
 //
 //  Sam Pakulski 3/21
@@ -9,17 +9,20 @@
 #include <vector>
 #include <string>
 #include <fstream>
+Spy::Spy() {
 
-Normal_Piece::Normal_Piece() : Piece() {
 }
-Normal_Piece::Normal_Piece(int i, bool s) {
-	value = i;
+Spy::Spy(bool s) : Normal_Piece() {
+	value = 1;
 	red = s;
 }
-Normal_Piece::~Normal_Piece() {
+Spy::~Spy() {
 }
-bool Normal_Piece::attack(Piece P){
-	if (value > P.getValue()) {
+bool Spy::attack(Piece P) {
+	if (P.getValue() == 10) {
+		return true;
+	}
+	else if (value > P.getValue()) {
 		return true;
 	}
 	else if (value < P.getValue()) {

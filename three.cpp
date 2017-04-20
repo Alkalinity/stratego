@@ -1,4 +1,4 @@
-//  Normal_Piece.cpp
+//  Three.cpp
 //  CS 120 A
 //
 //  Sam Pakulski 3/21
@@ -9,17 +9,20 @@
 #include <vector>
 #include <string>
 #include <fstream>
+Three::Three() {
 
-Normal_Piece::Normal_Piece() : Piece() {
 }
-Normal_Piece::Normal_Piece(int i, bool s) {
-	value = i;
+Three::Three(bool s) : Normal_Piece() {
+	value = 3;
 	red = s;
 }
-Normal_Piece::~Normal_Piece() {
+Three::~Three() {
 }
-bool Normal_Piece::attack(Piece P){
-	if (value > P.getValue()) {
+bool Three::attack(Piece P) {
+	if (P.getValue() == 99) {
+		return true;
+	}
+	else if (value > P.getValue()) {
 		return true;
 	}
 	else if (value < P.getValue()) {

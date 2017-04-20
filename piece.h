@@ -44,7 +44,7 @@ class Normal_Piece : public Piece {
 public:
 	Normal_Piece();
 
-	Normal_Piece(int i);
+	Normal_Piece(int i, bool s);
 
 	~Normal_Piece();
 
@@ -52,17 +52,19 @@ private:
 	virtual bool attack(Piece P) override;
 };
 
-class Three : Normal_Piece {
+class Three : public Normal_Piece {
 public:
 	Three();
+	Three(bool s);
 	~Three();
 
 private:
 	virtual bool attack(Piece P) override;
 };
-class Spy : Normal_Piece {
+class Spy : public Normal_Piece {
 public:
 	Spy();
+	Spy(bool s);
 	~Spy();
 private:
 	virtual bool attack(Piece P) override;

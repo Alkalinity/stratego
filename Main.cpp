@@ -7,8 +7,10 @@ int main() {
 
 	Board play;
 	play.printBoard();
-	while(1)
+	int playing = 0;
+	while(playing == 0)
 	{
+		playing = play.getGameState();
 		int fr = 0, fc = 0;
 		do
 		{
@@ -45,7 +47,7 @@ int main() {
 		{
 			play.move(fr, fc, validMoves[moveChoice - 1].first, validMoves[moveChoice - 1].second);
 		}
-
+		play.nextTurn();
 		play.printBoard();
 
 	}

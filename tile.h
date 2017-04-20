@@ -27,6 +27,7 @@ public:
 	Tile();
 	~Tile();
 	//constructor
+	Tile(Piece p);
 	/**
 	*Reruires: a background color
 	*Moifies: nothing

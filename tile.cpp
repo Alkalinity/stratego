@@ -18,6 +18,11 @@ Tile::Tile(color c, bool a) {
 	accessible = a;
 	occupied = false;
 }
+Tile::Tile(Piece p) {
+	occupant = p;
+	occupied = true;
+	accessible = true;
+}
 Tile::Tile(color c, Piece p){
 	background = c;
 	occupied = true;
